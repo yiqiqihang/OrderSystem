@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <environments default="environment1">
+        <environment id="environment1">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+                <property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl"/>
+                <property name="username" value="mxh"/>
+                <property name="password" value="Ora123456"/>
+            </dataSource>
+        </environment>
+
+    </environments>
+
+    <mappers>
+
+        <mapper resource="order\mapper\recipeMapper"></mapper>
+        <mapper resource="order\mapper\menuMapper"></mapper>
+        <mapper resource="order\mapper\oldMenuMapper"></mapper>
+        <mapper resource="order\mapper\mealMapper"></mapper>
+        <mapper resource="order\mapper\orderPersonMapper"></mapper>
+        <mapper resource="order\mapper\blanketOrderMapper"></mapper>
+        <mapper resource="order\mapper\usersMapper"></mapper>
+
+        <!--        <package name="order\mapper\recipeMapper"/>-->
+<!--        <mapper ="order\mapper\recipeMapper" ></mapper>-->
+    </mappers>
+
+
+</configuration>
+

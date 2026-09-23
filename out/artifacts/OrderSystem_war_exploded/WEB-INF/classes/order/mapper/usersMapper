@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--接口映射-->
+<mapper namespace="order.mapper.usersMapper">
+    <select id="selectUser" parameterType="String" resultType="order.pojo.users">
+        select USERS.* from USERS where U_LOGINNAME=#{username}
+    </select>
+</mapper>

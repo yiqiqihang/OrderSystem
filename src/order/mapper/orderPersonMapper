@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--接口映射-->
+<mapper namespace="order.mapper.orderPersonMapper">
+<!--    <insert id="selectForm" parameterType="order.pojo.orderPerson">-->
+<!--        INSERT INTO MXH.ORDERPERSON(select a.O_ID,a.O_NAME,a.O_PHONE,a.O_TIME,b.OM_NAME,b.OM_WEIGHT,b.OM_UNIT,b.OM_PRICE,b.ALL_PRICE,a.O_PRICE from ORDER_FORM a ,ORDER_MEAL b WHERE a.O_FNUM = #{name} AND a.O_ID = (select max(to_number(O_ID)) from ORDER_FORM ))-->
+<!--    </insert>-->
+    <select id="selectOrderPerson" parameterType="order.pojo.orderPerson" resultType="order.pojo.orderPerson">
+        SELECT * FROM MXH.ORDERPERSON WHERE O_NAME = #{name}
+    </select>
+
+    <delete id="cancelOrderPerson" parameterType="order.pojo.orderPerson">
+        DELETE FROM MXH.ORDERPERSON WHERE "O_ID" = #{r_id}
+    </delete>
+
+    <delete id="cancelOrderForm" parameterType="order.pojo.orderPerson">
+        DELETE FROM MXH.ORDER_FORM WHERE "O_ID" = #{r_id}
+    </delete>
+
+    <select id="selectPersonTime" resultType="order.pojo.orderPerson">
+        SELECT * FROM MXH.ORDERPERSON t WHERE 1=1 AND t.O_TIME between to_date(to_char(#{beginTime},'yyyy-MM-dd'),'yyyy-MM-dd') AND to_date(to_char(#{endTime},'yyyy-MM-dd'),'yyyy-MM-dd')
+    </select>
+
+<!--    时间的模糊查询-->
+    <select id="selectPersonLikeTime" resultType="order.pojo.orderPerson">
+        select * from  MXH.ORDERPERSON t where t.O_TIME like to_date(to_char(#{beginTime},'yyyy-MM-dd'),'yyyy-MM-dd')
+    </select>
+
+    <select id="M_OrderList" parameterType="order.pojo.orderPerson" resultType="order.pojo.orderPerson">
+        SELECT "OM_NAME","OM_PRICE",OM_UNIT,sum("OM_WEIGHT")"OM_WEIGHT" ,min("O_TIME")"O_TIME",SUM("ALL_PRICE")"ALL_PRICE" FROM ORDERPERSON WHERE to_number(to_char(O_TIME,'MM'))=TO_NUMBER(TO_CHAR(SYSDATE,'MM')) AND to_number(to_char(O_TIME,'YY'))=to_number(to_char(SYSDATE,'YY'))GROUP BY "OM_NAME","OM_PRICE","OM_UNIT"
+    </select>
+
+    <select id="M_personOrderList" parameterType="order.pojo.orderPerson" resultType="order.pojo.orderPerson">
+        SELECT O_TIME,OM_NAME,OM_WEIGHT,OM_UNIT,OM_PRICE,ALL_PRICE FROM MXH.ORDERPERSON WHERE to_number(to_char(O_TIME,'MM'))=TO_NUMBER(TO_CHAR(SYSDATE,'MM')) AND to_number(to_char(O_TIME,'YY'))=to_number(to_char(SYSDATE,'YY')) AND O_NAME =#{intext}
+    </select>
+
+    <select id="selectO_price" parameterType="order.pojo.orderPerson" resultType="int">
+        select sum(ALL_PRICE) TotalMoney from MXH.ORDERPERSON WHERE to_number(to_char(O_TIME,'MM'))=TO_NUMBER(TO_CHAR(SYSDATE,'MM')) AND to_number(to_char(O_TIME,'YY'))=to_number(to_char(SYSDATE,'YY'))
+    </select>
+
+    <select id="selectPersonO_price" parameterType="order.pojo.orderPerson" resultType="int" >
+        select sum(ALL_PRICE) TotalMoney from MXH.ORDERPERSON WHERE to_number(to_char(O_TIME,'MM'))=TO_NUMBER(TO_CHAR(SYSDATE,'MM')) AND to_number(to_char(O_TIME,'YY'))=to_number(to_char(SYSDATE,'YY')) AND O_NAME = #{name}
+    </select>
+
+    <select id="monthCountUser" parameterType="order.pojo.orderPerson" resultType="order.pojo.orderPerson">
+        SELECT O_TIME,OM_NAME,OM_WEIGHT,OM_UNIT,OM_PRICE,ALL_PRICE FROM MXH.ORDERPERSON WHERE to_number(to_char(O_TIME,'MM'))=TO_NUMBER(TO_CHAR(SYSDATE,'MM')) AND to_number(to_char(O_TIME,'YY'))=to_number(to_char(SYSDATE,'YY')) AND O_NAME =#{o_name}
+    </select>
+</mapper>

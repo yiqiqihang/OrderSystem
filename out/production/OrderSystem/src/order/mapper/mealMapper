@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--接口映射-->
+<mapper namespace="order.mapper.mealMapper">
+    <insert id="insertNameMeal" parameterType="order.pojo.orderMeal">
+        INSERT INTO "ORDER_MEAL" ("OM_ID","OM_NAME", "OM_WEIGHT", "OM_UNIT", "OM_PRICE","ALL_PRICE","OM_TIME","U_NAME") VALUES (#{OM_ID},#{OM_NAME}, #{OM_WEIGHT}, #{OM_UNIT}, #{OM_PRICE}, #{ALL_PRICE},#{OM_TIME},#{U_NAME})
+    </insert>
+
+    <select id="selectMeal" resultType="order.pojo.orderMeal">
+        SELECT OM_NAME,OM_UNIT,OM_WEIGHT,OM_PRICE,ALL_PRICE FROM "ORDER_MEAL"
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) total from "ORDER_MEAL"
+    </select>
+
+    <update id="updateNumber" parameterType="order.pojo.orderMeal">
+        UPDATE MXH.ORDER_MEAL SET OM_WEIGHT = #{om_WEIGHT} , ALL_PRICE = #{om_price} WHERE OM_NAME=#{om_NAME}
+    </update>
+
+    <delete id="delectOrderMeal" parameterType="String">
+        DELETE FROM MXH.ORDER_MEAL WHERE "OM_NAME" = #{oM_NANE}
+    </delete>
+
+    <select id="selectstory" resultType="int">
+        select count(*) total from MXH.ORDER_MEAL WHERE OM_NAME = #{m_name}
+    </select>
+
+    <update id="updateMeal" parameterType="order.pojo.orderMeal">
+        UPDATE MXH.ORDER_MEAL SET OM_WEIGHT = OM_WEIGHT +1,ALL_PRICE = ALL_PRICE+OM_PRICE  WHERE OM_NAME =#{m_name}
+    </update>
+
+    <select id="getTotalQty" resultType="Integer">
+        select sum(OM_WEIGHT) totalQty from MXH.ORDER_MEAL
+    </select>
+
+    <select id="getTotalMoney" resultType="Integer">
+        select sum(ALL_PRICE) TotalMoney from MXH.ORDER_MEAL
+    </select>
+
+    <select id="selectUsers" resultType="String">
+        SELECT LISTAGG(OM_NAME, ',') WITHIN GROUP(ORDER BY OM_NAME)listagg FROM ORDER_MEAL WHERE U_NAME = #{o_name}
+    </select>
+
+    <select id="getUserinformations" resultType="order.pojo.users">
+        SELECT * FROM USERS WHERE U_LOGINNAME = #{o_name}
+    </select>
+
+    <insert id="transform" parameterType="order.pojo.orderForm">
+        INSERT INTO "ORDER_FORM" ("O_ID","O_NAME", "O_PHONE", "O_PRICE", "O_FNUM","O_TIME","O_MENUNAEM") VALUES (#{O_ID},#{o_NAME}, #{o_PHONE}, #{o_PRICE}, #{o_FNUM}, #{o_TIME},#{o_MENUNAEM})
+    </insert>
+
+    <insert id="insertOrderPerson" parameterType="order.pojo.orderPerson">
+        INSERT INTO MXH.ORDERPERSON(select a.O_ID,a.O_NAME,a.O_PHONE,a.O_TIME,b.OM_NAME,b.OM_WEIGHT,b.OM_UNIT,b.OM_PRICE,b.ALL_PRICE,a.O_PRICE from ORDER_FORM a ,ORDER_MEAL b WHERE a.O_FNUM = #{name} AND a.O_ID = (select max(to_number(O_ID)) from ORDER_FORM ))
+    </insert>
+
+    <delete id="delectShopping" parameterType="order.pojo.orderMeal">
+        TRUNCATE TABLE MXH.ORDER_MEAL reuse storage
+    </delete>
+
+</mapper>

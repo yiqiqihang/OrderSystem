@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--接口映射-->
+<mapper namespace="order.mapper.recipeMapper">
+
+    <select id="selectAllrecipe" resultType="order.pojo.recipe">
+        select * from (select a.*,rownum rn from (select * from RECIPE) a where rownum&lt;=(#{start}+#{limit})) where rn>=#{start}
+    </select>
+
+    <insert id="addrecipe" parameterType="order.pojo.recipe">
+        INSERT INTO recipe ("R_ID","R_NAME", "R_GENRE", "R_UNIT", "R_PRICE", "R_INSTRUCTION","R_IMAGE") VALUES (#{R_ID},#{R_NAME}, #{R_GENRE}, #{R_UNIT}, #{R_PRICE}, #{R_INSTRUCTION},#{R_IMAGE})
+    </insert>
+
+<!--    具有返回值int-->
+    <select id="countRecipe" resultType="int">
+        select count(*) total from "RECIPE"
+    </select>
+    
+    <select id="selectRecipe" resultType="order.pojo.recipe" >
+        SELECT * FROM "RECIPE"
+    </select>
+
+    <delete id="delectName" parameterType="String">
+        DELETE FROM RECIPE WHERE "R_NAME" = #{r_name}
+    </delete>
+
+    <update id="updateRecipe" parameterType="order.pojo.recipe">
+        UPDATE MXH.RECIPE SET R_NAME=#{r_NAME} , R_GENRE = #{r_GENRE} , R_UNIT = #{r_UNIT} , R_PRICE = #{r_PRICE} WHERE R_ID=#{r_ID}
+    </update>
+
+<!--    <insert id="addCp" parameterType="order.pojo.recipe">-->
+<!--        INSERT INTO mxh.recipe ("R_ID","R_NAME", "R_GENRE", "R_UNIT", "R_PRICE", "R_INSTRUCTION","R_IMAGE") VALUES (#{R_ID},#{cname}, #{fenlei}, #{danwei}, #{money}, #{image},#{shuoming})-->
+<!--    </insert>-->
+
+    <insert id="insertRecipe" parameterType="order.pojo.recipe">
+        INSERT INTO "MXH"."RECIPE" ("R_ID","R_NAME", "R_GENRE", "R_UNIT", "R_PRICE", "R_INSTRUCTION","R_IMAGE") VALUES (#{R_ID},#{r_NAME}, #{r_GENRE}, #{r_UNIT}, #{r_PRICE}, #{r_INSTRUCTION},#{r_IMAGE})
+    </insert>
+
+<!--    <select id="checkRecipe" resultType="order.pojo.recipe">-->
+<!--        SELECT * FROM RECIPE WHERE R_NAME like #{name}-->
+<!--    </select>-->
+
+    <select id="checkRecipe" resultType="order.pojo.recipe" parameterType="String">
+<!--        <bind name="name" value="'%'+R_NAME+'%'"/>-->
+        select * from MXH.RECIPE where R_NAME like '%'||#{name}||'%' OR R_UNIT LIKE '%'||#{name}||'%' OR R_GENRE LIKE '%'||#{name}||'%' OR R_PRICE LIKE '%'||#{name}||'%'
+    </select>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--接口映射-->
+<mapper namespace="order.mapper.blanketOrderMapper">
+    <select id="selectBlanketOrder" resultType="order.pojo.blanketOrder">
+--         SELECT OM_NAME,NULLIF(SUM(OM_WEIGHT), 0) as SUM FROM MXH.ORDERPERSON GROUP BY OM_NAME
+        SELECT OM_NAME,NULLIF(SUM(OM_WEIGHT), 0) as SUM FROM MXH.ORDERPERSON where o_time between (select trunc(SYSDATE) from dual) and (select trunc(SYSDATE)+9/24 from dual)  GROUP BY OM_NAME
+    </select>
+
+    <select id="count" resultType="int">
+        SELECT COUNT(*) FROM (SELECT OM_NAME FROM MXH.ORDERPERSON GROUP BY OM_NAME )
+    </select>
+
+    <select id="selectCaterInformation" resultType="order.pojo.orderForm">
+        SELECT O_ID,O_NAME,O_PHONE,O_MENUNAEM,O_PRICE,O_TIME FROM (select a.*,rownum rn from (select * from MXH.ORDER_FORM) a where rownum&lt;=(#{start}+#{limit})) where rn>=#{start} and o_time between(select trunc(SYSDATE) from dual) and(select trunc(SYSDATE)+9/24 from dual)
+    </select>
+
+    <select id="orderFormscount" resultType="int">
+        SELECT COUNT(*) as total FROM MXH.ORDER_FORM
+    </select>
+</mapper>

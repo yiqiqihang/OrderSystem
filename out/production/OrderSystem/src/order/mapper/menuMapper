@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--接口映射-->
+<mapper namespace="order.mapper.menuMapper">
+    <select id="selectMenu" resultType="order.pojo.menu">
+        select * from (select a.*,rownum rn from (select * from MENU) a where rownum&lt;=(#{start}+#{limit})) where rn>=#{start}
+--         select * from "MENU"
+    </select>
+
+    <select id="countMenu" resultType="int">
+        select count(*) total from "MENU"
+    </select>
+
+    <insert id="insertMenu" parameterType="order.pojo.menu">
+        INSERT INTO menu ("M_ID","M_NAME", "M_GENRE", "M_UNIT", "M_PRICE","M_IMAGE","M_TIME") VALUES (#{M_ID},#{M_NAME}, #{M_GENRE}, #{M_UNIT}, #{M_PRICE}, #{M_IMAGE},#{M_TIME})
+    </insert>
+
+<!--有参数，有返回值-->
+    <select id="checkNameSelect" parameterType="order.pojo.menu" resultType="order.pojo.menu">
+        SELECT M_NAME FROM "MENU" where "M_NAME" = #{r_name}
+    </select>
+
+    <delete id="delectMenu" parameterType="String">
+        DELETE FROM MENU WHERE "M_NAME" = #{m_NAME}
+    </delete>
+
+    <select id="selectcheck" resultType="order.pojo.menu" parameterType="String">
+        select * from MXH.MENU where M_NAME like '%'||#{name}||'%' OR M_UNIT LIKE '%'||#{name}||'%' OR M_GENRE LIKE '%'||#{name}||'%' OR M_PRICE LIKE '%'||#{name}||'%'
+    </select>
+
+    <insert id="addToMenu" parameterType="order.pojo.menu">
+        INSERT INTO menu ("M_ID","M_NAME", "M_GENRE", "M_UNIT", "M_PRICE","M_IMAGE","M_TIME") VALUES (#{M_ID},#{M_NAME}, #{M_GENRE}, #{M_UNIT}, #{M_PRICE}, #{M_IMAGE},#{M_TIME})
+    </insert>
+
+    <update id="updateTime">
+        UPDATE MXH.STORAGE SET S_TIME = #{m_time} WHERE S_ID = #{m_id}
+    </update>
+
+    <select id="existence" resultType="int">
+        SELECT count(*) total FROM "MENU" where "M_NAME" = #{m_name}
+    </select>
+<!--    <select id="seleceMenuTime" parameterMap="order.pojo.menu" resultType="Date">-->
+<!--        SELECT M_TIME FROM MENU WHERE M_NAME = #{r_id}-->
+<!--    </select>-->
+
+</mapper>

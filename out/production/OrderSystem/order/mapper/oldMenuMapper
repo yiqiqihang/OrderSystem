@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--接口映射-->
+<mapper namespace="order.mapper.oldMenuMapper">
+
+    <insert id="addOldMenu" parameterType="order.pojo.storage">
+        INSERT INTO "STORAGE" ("S_ID","S_NAME", "S_GENRE", "S_UNIT", "S_PRICE","S_TIME","S_IMAGE") VALUES (#{S_ID},#{s_NAME}, #{s_GENRE}, #{s_UNIT}, #{s_PRICE},#{s_TIME}, #{s_IMAGE})
+    </insert>
+
+    <!--    具有返回值int-->
+    <select id="selectByCount" resultType="int">
+        select count(*) total from "STORAGE"
+    </select>
+
+    <select id="selectAllrecipeByPage" resultType="order.pojo.storage">
+        select * from (select a.*,rownum rn from (select * from STORAGE) a where rownum&lt;=(#{start}+#{limit})) where rn>=#{start}
+    </select>
+
+    <delete id="delectOldMenu" parameterType="order.pojo.storage">
+        DELETE FROM STORAGE WHERE "S_ID" = #{s_ID}
+    </delete>
+
+    <delete id="remitOldMenu" parameterType="order.pojo.storage">
+        DELETE FROM STORAGE WHERE "S_NAME" = #{r_ID} AND S_TIME > SYSDATE -0.5
+    </delete>
+
+    <select id="selectTime" resultType="order.pojo.storage">
+        SELECT * FROM STORAGE t WHERE 1=1 AND t.S_TIME between to_date(to_char(#{beginTime},'yyyy-MM-dd HH24:MI:ss'),'yyyy-MM-dd HH24-MI:ss') AND to_date(to_char(#{endTime},'yyyy-MM-dd HH24:MI:ss'),'yyyy-MM-dd HH24:MI:ss')
+    </select>
+
+<!--    <select id="seleceMenuTime" resultType="Date">-->
+<!--        SELECT M_TIME FROM MENU WHERE M_NAME = #{r_id}-->
+<!--    </select>-->
+
+<!--    <select id="selectStorageTime" resultType="Date">-->
+<!--        select S_TIME from storage where S_NAME = #{r_id}-->
+<!--    </select>-->
+
+</mapper>
